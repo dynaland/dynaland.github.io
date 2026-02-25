@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Google Form Responses</title>
+  <title>Dynaland</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
-  <h2>Latest Google Form Responses</h2>
+  <h2>Dynaland Main Chat</h2>
   <ul id="responsesList"></ul>
 
   <script>
@@ -18,7 +18,7 @@
     // Google Forms always store responses in "Form Responses 1"
     const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201`;
 
-    const refreshInterval = 10000; // 10 seconds
+    const refreshInterval = 4000; // 10 seconds
 
     function loadResponses() {
       fetch(sheetUrl)
