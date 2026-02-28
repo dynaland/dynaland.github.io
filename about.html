@@ -1,1 +1,91 @@
-under construction
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynaland Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #chatBox { 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      height: 400px; 
+      overflow-y: scroll; 
+      background: #f7f7f7;
+    }
+    .msg { 
+      margin-bottom: 12px; 
+      padding: 8px; 
+      background: white; 
+      border-radius: 6px; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .name { font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Chat</h2>
+
+  <div id="chatBox"></div>
+
+  <h3>Send a message</h3>
+  <input id="nameInput" placeholder="Your name"><br><br>
+  <input id="msgInput" placeholder="Your message" style="width: 300px;">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    // ---- CONFIG ----
+    const formId = "1FAIpQLSceBdjUMW2ywvP6RlI2RPkEAoAjaju9wlIamejRK4qbkUdvfg";
+    const entryName = "entry.199857317";     // e.g. entry.123456789
+    const entryMessage = "entry.1678144127;
+    const sheetId = "1k7525l8MQdC4O5Uwz4JaO9-X7uORhowgc_pDv3oOeHQ";
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201`;
+    const refreshInterval = 3000; // 3 seconds
+
+    // ---- SEND MESSAGE TO GOOGLE FORM ----
+    function sendMessage() {
+      const name = document.getElementById("nameInput").value;
+      const msg = document.getElementById("msgInput").value;
+
+      if (!msg.trim()) return;
+
+      const formData = new FormData();
+      formData.append(entryName, name);
+      formData.append(entryMessage, msg);
+
+      fetch(`https://docs.google.com/forms/d/${formId}/formResponse`, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      });
+
+      document.getElementById("msgInput").value = "";
+    }
+
+    // ---- LOAD MESSAGES FROM GOOGLE SHEET ----
+    function loadChat() {
+      fetch(sheetUrl)
+        .then(r => r.text())
+        .then(csv => {
+          const rows = csv.trim().split("\n").map(r => r.split(",")).reverse();
+          const chatBox = document.getElementById("chatBox");
+          chatBox.innerHTML = "";
+
+          rows.slice(0, -1).forEach(row => {
+            const timestamp = row[0];
+            const name = row[1];
+            const message = row[2];
+
+            const div = document.createElement("div");
+            div.className = "msg";
+            div.innerHTML = `<div class="name">${name}</div>${message}`;
+            chatBox.appendChild(div);
+          });
+        });
+    }
+
+    loadChat();
+    setInterval(loadChat, refreshInterval);
+  </script>
+
+</body>
+</html>
