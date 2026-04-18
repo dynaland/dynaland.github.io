@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynaland</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    li { margin-bottom: 10px; padding: 8px; background: #f3f3f3; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <p align="right"></h2>Dynaland Main Chat      </h2></p>
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSceBdjUMW2ywvP6RlI2RPkEAoAjaju9wlIamejRK4qbkUdvfg/viewform?embedded=true" width="640" height="640" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+  <ul id="responsesList"></ul>
+
+  <script>
+    // Replace with your Google Sheet ID
+    const sheetId = "1k7525l8MQdC4O5Uwz4JaO9-X7uORhowgc_pDv3oOeHQ";
+
+    // Google Forms store responses in a tab named "Form Responses 1"
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201`;
+
+    const refreshInterval = 2000; // 10 seconds
+
+    function loadResponses() {
+      fetch(sheetUrl)
+        .then(response => response.text())
+        .then(csv => {
+          const rows = csv
+            .trim()
+            .split("\n")
+            .map(r => r.split(","))
+            .reverse(); // newest first
+
+          const list = document.getElementById("responsesList");
+          list.innerHTML = ""; // clear old entries
+
+          // Skip the header row (now last because of reverse)
+          rows.slice(0, -1).forEach(row => {
+
+            // ---- SELECT WHICH COLUMNS TO DISPLAY ----
+            // Adjust these indexes to match your sheet:
+            const timestamp = row[0];   // Column A
+            const name = row[1];        // Column B
+            const message = row[3];     // Column C
+            // -----------------------------------------
+
+            const li = document.createElement("li");
+            li.textContent = `${name} — ${message}`;
+            list.appendChild(li);
+          });
+        })
+        .catch(err => console.error("Error loading responses:", err));
+    }
+
+    // Load immediately
+    loadResponses();
+
+    // Auto-refresh
+    setInterval(loadResponses, refreshInterval);
+  </script>
+</body>
+</html>
