@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON List Search</title>
+    <title>DynaLand - In Development</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         input[type="text"] { width: 300px; padding: 8px; }
@@ -13,18 +13,18 @@
     </style>
 </head>
 <body>
-    <h1>Search JSON List</h1>
-    <input type="text" id="searchInput" placeholder="Type to search...">
+    <h1>Games</h1>
+    <input type="text" id="searchInput" placeholder="Name or Author">
     <ul id="results"></ul>
 
     <script>
         // Sample JSON data - this would normally be loaded from an external file
         const jsonData = [
-            {"name": "Apple", "category": "Fruit"},
-            {"name": "Banana", "category": "Fruit"},
-            {"name": "Carrot", "category": "Vegetable"},
-            {"name": "Date", "category": "Fruit"},
-            {"name": "Eggplant", "category": "Vegetable"}
+            {"name": "Apple", "creator": "Fruit", "location": "lon"},
+            {"name": "Banana", "creator": "Fruit", "location": "lon"},
+            {"name": "Carrot", "creator": "Vegetable", "location": "lon"},
+            {"name": "Date", "creator": "Fruit", "location": "lon"},
+            {"name": "Eggplant", "creator": "Vegetable", "location": "lon"}
         ];
 
         const searchInput = document.getElementById('searchInput');
@@ -34,12 +34,12 @@
         function renderResults(filteredData) {
             resultsList.innerHTML = '';
             if (filteredData.length === 0) {
-                resultsList.innerHTML = '<li>No results found</li>';
+                resultsList.innerHTML = '<li>Nothing Found</li>';
                 return;
             }
             filteredData.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = `${item.name} (${item.category})`;
+                li.textContent = `${item.name} (${item.creator}) (${item.location})`;
                 resultsList.appendChild(li);
             });
         }
@@ -49,7 +49,7 @@
             const query = searchInput.value.toLowerCase();
             const filtered = jsonData.filter(item => 
                 item.name.toLowerCase().includes(query) || 
-                item.category.toLowerCase().includes(query)
+                item.creator.toLowerCase().includes(query)
             );
             renderResults(filtered);
         }
